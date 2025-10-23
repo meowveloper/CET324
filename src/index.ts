@@ -1,6 +1,9 @@
 import { serve } from "bun";
-import index from "./index.html";
+import index from "@/src/index.html";
+import { init_db } from "@/src/server/services/db";
 
+const res = init_db();
+if(res instanceof Error) throw res;
 const server = serve({
     routes: {
         "/*": index,
@@ -21,6 +24,15 @@ const server = serve({
         // Echo console logs from the browser to the server
         console: true,
     },
+
+    error(error) {
+	    return new Response(`<pre>${error}\n${error.stack}</pre>`, {
+		    headers: {
+			    'Content-Type': 'text/html',
+		    },
+	    });
+	},
 });
+
 
 console.log(`🚀 Server running at ${server.url}`);
