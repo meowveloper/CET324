@@ -7,13 +7,27 @@
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "@/src/client/App";
 import "../styles/globals.css"
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+import Home_Page from "@/src/client/pages/home";
+import Login_Page from "@/src/client/pages/login";
+
+const router =  createBrowserRouter([
+    {
+        path: '/',
+        element: <Home_Page />
+    },
+    {
+        path: '/login',
+        element: <Login_Page />
+    }
+]);
 
 const elem = document.getElementById("root")!;
 const app = (
     <StrictMode>
-        <App />
+        <RouterProvider router={router} />
     </StrictMode>
 );
 
