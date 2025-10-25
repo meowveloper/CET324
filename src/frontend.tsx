@@ -12,17 +12,20 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import Home_Page from "@/src/client/pages/home";
 import Login_Page from "@/src/client/pages/login";
+import Register_Page from "@/src/client/pages/register";
 import { ThemeProvider } from "@/src/client/components/theme-provider";
+import Root_Layout from "@/src/client/layouts/root";
 
 const router =  createBrowserRouter([
     {
-        path: '/',
-        element: <Home_Page />
+        path: "/",
+        Component: Root_Layout,
+        children: [
+            { index: true, Component: Home_Page },
+            { path: "login", Component: Login_Page },
+            { path: "register", Component: Register_Page },
+        ]
     },
-    {
-        path: '/login',
-        element: <Login_Page />
-    }
 ]);
 
 const elem = document.getElementById("root")!;
