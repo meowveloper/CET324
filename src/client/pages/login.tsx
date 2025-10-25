@@ -10,6 +10,7 @@ import {
     CardTitle,
 } from "@/src/client/components/ui/card"
 import { Button } from "@/src/client/components/ui/button";
+import { NavLink } from "react-router";
 
 export default function Login_Page() {
     return (
@@ -22,7 +23,9 @@ export default function Login_Page() {
                             Enter your email below to login to your account
                         </CardDescription>
                         <CardAction>
-                            <Button variant="link">Sign Up</Button>
+                            <Button variant="link">
+                                <NavLink to="/register" end>Register</NavLink>
+                            </Button>
                         </CardAction>
                     </CardHeader>
                     <CardContent>
