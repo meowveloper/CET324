@@ -1,6 +1,7 @@
 import { serve } from "bun";
 import index from "@/src/index.html";
 import { init_db } from "@/src/server/services/db";
+import { register_controller } from "./server/controllers/register";
 
 const res = init_db();
 if(res instanceof Error) throw res;
@@ -9,11 +10,9 @@ const server = serve({
         "/*": index,
 
         "/api/register": {
-            async POST(req) {
-                return Response.json({
-                    message: 'you have registered'
-                });
-            }
+            
+            // async POST(req) { return await register_controller(req); }
+            POST: async (req) => await register_controller(req),
         },
     },
 
@@ -36,3 +35,4 @@ const server = serve({
 
 
 console.log(`🚀 Server running at ${server.url}`);
+
