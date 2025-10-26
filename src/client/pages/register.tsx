@@ -11,8 +11,11 @@ import {
 } from "@/src/client/components/ui/card"
 import { Button } from "@/src/client/components/ui/button";
 import { NavLink } from "react-router";
+import use_captcha from "@/src/client/hooks/use-captcha";
+import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
 
 export default function Register_Page() {
+    const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
     return (
         <div>
             <div className="w-full lg:w-5/12 mx-auto my-32">
@@ -28,7 +31,7 @@ export default function Register_Page() {
                             </Button>
                         </CardAction>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex flex-col gap-3">
                         <form>
                             <div className="flex flex-col gap-6">
                                 <div className="grid gap-2">
@@ -54,14 +57,40 @@ export default function Register_Page() {
                                 </div>
                             </div>
                         </form>
+                        {
+                            captcha instanceof Error ? (
+                                <div className="w-full">
+                                    Error generating captcha
+                                </div>
+                            ) : (
+                                <div className="w-full space-y-1">
+                                    <p className="text-sm">
+                                        {captcha.question}
+                                    </p>
+                                    <p className="text-sm">
+                                    </p>
+                                    <Input type="text" onChange={e => set_captcha_answer(e.target.value)} value={captcha_answer} placeholder="your answer" />
+                                    {captcha_error && (
+                                        <Alert variant={'destructive'} className="border-none p-0">
+                                            <AlertDescription>
+                                                <p>{captcha_error}</p>
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                </div>
+                            )
+                        }
                     </CardContent>
                     <CardFooter className="flex-col gap-2">
-                        <Button type="submit" className="w-full">
-                            Login
+                        <Button onClick={handle_register} type="button" className="w-full">
+                            Register
                         </Button>
                     </CardFooter>
                 </Card>
             </div>
         </div>
     );
+    async function handle_register() {
+        is_valid_captcha(captcha, captcha_answer);
+    }
 }
