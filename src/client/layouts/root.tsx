@@ -16,7 +16,7 @@ export default function Root_Layout() {
                     </CardDescription>
                 </Card>
             </div>
-            <div className="px-5 py-3">
+            <div className="px-5 py-20">
                 <Outlet />
             </div>
         </div>
