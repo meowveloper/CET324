@@ -1,4 +1,4 @@
-import { send_email } from "@/src/server/services/email";
+import { send_email, send_email_with_grid } from "@/src/server/services/email";
 import otp_storage from "@/src/server/otp-storage";
 
 declare var self: Worker;
@@ -20,7 +20,7 @@ const send_otp = async (to: string, otp: string) => {
     const subject = `One time code/password for authentication`;
     const text = `Your one time code is "${otp}"`
     const html = `<div>Your one time code is <code>${otp}</code></div>`;
-    const info = await send_email(to, subject, text, html);
+    const info = await send_email_with_grid(to, subject, text, html);
     if(info instanceof Error) console.log('failed to send otp' + info.message, info);
-    else console.log('successfully send otp. message_id: ', info.message_id);
+    else console.log('successfully send otp to ' + to);
 }
