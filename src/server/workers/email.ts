@@ -16,10 +16,11 @@ self.onmessage = async (event: MessageEvent) => {
 };
 
 const send_otp = async (to: string, otp: string) => {
+    console.log('sending OTP to ' + to);
     const subject = `One time code/password for authentication`;
     const text = `Your one time code is "${otp}"`
     const html = `<div>Your one time code is <code>${otp}</code></div>`;
     const info = await send_email(to, subject, text, html);
-    if(info instanceof Error) throw new Error('failed to send otp');
+    if(info instanceof Error) console.log('failed to send otp' + info.message, info);
     else console.log('successfully send otp. message_id: ', info.message_id);
 }
