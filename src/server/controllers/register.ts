@@ -2,6 +2,8 @@ import { add_user, get_user_by_email } from "@/src/server/services/db";
 import type { Register_DTO } from "@/src/share/types";
 import { error, get_hashed_password, get_jwt_token, set_token_cookie, success } from "@/src/server/utils";
 
+const email_worker = new Worker('@/src/server/workers/email.ts');
+
 export const register_controller = async (req: Bun.BunRequest<"/api/register">) => {
     const cookies = req.cookies;
     const { email, password }: Register_DTO = await req.json();
@@ -14,5 +16,6 @@ export const register_controller = async (req: Bun.BunRequest<"/api/register">) 
     const token = await get_jwt_token(email);
     if(token instanceof Error) return (error(token.message));
     set_token_cookie(cookies, token);
+    email_worker.postMessage(email);
     return success({ message: 'you have registered' });
 }

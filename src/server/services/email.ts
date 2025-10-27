@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: Number(process.env.SMTP_PORT) === 465,
+    host: Bun.env.SMTP_HOST,
+    port: Number(Bun.env.SMTP_PORT),
+    secure: Number(Bun.env.SMTP_PORT) === 465,
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: Bun.env.SMTP_USER,
+        pass: Bun.env.SMTP_PASS,
     },
 });
 
@@ -19,7 +19,7 @@ type SendEmail = (to: string, subject: string, text: string, html: string) => Pr
 export const send_email: SendEmail = async (to, subject, text, html) => {
     try {
         const info = await transporter.sendMail({
-            from: `"Auth System" <${process.env.SMTP_USER}>`,
+            from: `"CET-324 Authentication System"`,
             to,
             subject,
             html,

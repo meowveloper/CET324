@@ -10,26 +10,18 @@ const server = serve({
         "/*": index,
 
         "/api/register": {
-            
-            // async POST(req) { return await register_controller(req); }
             POST: async (req) => await register_controller(req),
         },
     },
 
     development: process.env.NODE_ENV !== "production" && {
-        // Enable browser hot reloading in development
         hmr: true,
-
-        // Echo console logs from the browser to the server
         console: true,
     },
 
     error(error) {
-	    return new Response(`<pre>${error}\n${error.stack}</pre>`, {
-		    headers: {
-			    'Content-Type': 'text/html',
-		    },
-	    });
+        console.log(error);
+        return Response.json({ message: error.message }, {status: 500});
 	},
 });
 
