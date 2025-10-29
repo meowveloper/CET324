@@ -2,7 +2,8 @@ import { serve } from "bun";
 import index from "@/src/index.html";
 import { init_db } from "@/src/server/services/db";
 import { register_controller } from "./server/controllers/register";
-import { otp_controller } from "./server/controllers/otp";
+import { otp_controller } from "@/src/server/controllers/otp";
+import { me_controller } from "@/src/server/controllers/me";
 
 const res = init_db();
 if(res instanceof Error) throw res;
@@ -20,11 +21,15 @@ const server = serve({
         "/api/verify-otp": {
             POST: async (req) => await otp_controller(req),
         },
+
+        "/api/me": {
+            GET: async (req) => await me_controller(req),
+        }
     },
 
     development: process.env.NODE_ENV !== "production" && {
         hmr: true,
-        console: false,
+        console: true,
     },
 
     error(error) {

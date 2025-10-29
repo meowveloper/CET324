@@ -16,6 +16,7 @@ import Register_Page from "@/src/client/pages/register";
 import { ThemeProvider } from "@/src/client/components/theme-provider";
 import Root_Layout from "@/src/client/layouts/root";
 import OTP_Page from "@/src/client/pages/otp";
+import { AuthProvider } from "@/src/client/context/auth-context";
 
 const router =  createBrowserRouter([
     {
@@ -34,7 +35,9 @@ const elem = document.getElementById("root")!;
 const app = (
     <StrictMode>
         <ThemeProvider defaultTheme="dark" storageKey="theme">
-            <RouterProvider router={router} />
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
         </ThemeProvider>
     </StrictMode>
 );

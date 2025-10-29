@@ -12,19 +12,22 @@ import {
 } from "@/src/client/components/ui/card"
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { OTP_EXPIRE_DURATION } from "@/src/share/consts";
-import localstorage_manager from "../lib/custom/localstorage";
+import localstorage_manager from "@/src/client/lib/custom/localstorage";
 import { Button } from "@/src/client/components/ui/button";
 import { Spinner } from "@/src/client/components/ui/spinner";
 import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
 import use_otp from "@/src/client/hooks/use-otp";
 import { useNavigate } from "react-router";
+import { use_auth } from "@/src/client/context/auth-context";
 
 export default function OTP_Page() {
     const initial_expires_in = Number(localstorage_manager.get('otp_expires_in'))
     const { otp, set_otp, error, loading, verify_otp } = use_otp();
     const [expires_in, set_expires_in] = useState<number>((initial_expires_in) ? initial_expires_in : OTP_EXPIRE_DURATION);
     const interval_ref = useRef<NodeJS.Timeout | null>(null);
+
     const navigate = useNavigate();
+    const auth_context = use_auth();
 
     useEffect(() => {
         if(interval_ref.current === null && expires_in > 0) {
@@ -42,7 +45,6 @@ export default function OTP_Page() {
     },[]);
 
     useEffect(() => {
-        console.log('setting otp expires in');
         localstorage_manager.set('otp_expires_in', `${expires_in}`);
     }, [expires_in]);
 
@@ -57,6 +59,7 @@ export default function OTP_Page() {
         if (success) {
             localstorage_manager.remove('otp_email');
             localstorage_manager.remove('otp_expires_in');
+            await auth_context.check_user(); 
             navigate('/');
         }
     }

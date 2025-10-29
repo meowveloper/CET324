@@ -15,3 +15,7 @@ export type VerifyOTP_DTO = {
 export type VerifyOTP_API_Response = {
     message: string;
 }
+
+export type Me_API_Response = {
+    email: string;
+}
