@@ -53,8 +53,10 @@ export default function OTP_Page() {
         e.preventDefault();
         const email = localstorage_manager.get('otp_email');
         if (!email) return;
-        await verify_otp({ email, otp });
-        if (!error.trim()) {
+        const success = await verify_otp({ email, otp });
+        if (success) {
+            localstorage_manager.remove('otp_email');
+            localstorage_manager.remove('otp_expires_in');
             navigate('/');
         }
     }

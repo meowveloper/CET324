@@ -6,6 +6,9 @@ const localstorage_manager = {
     },
     set(key: typeof keys[number], val: string) {
         window.localStorage.setItem(key, val);
+    },
+    remove(key: typeof keys[number]) {
+        window.localStorage.removeItem(key);
     }
 }
 
