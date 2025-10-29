@@ -22,6 +22,16 @@ export default function Register_Page() {
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
     const {email, password, confirm_password, set_email, set_password, set_confirm_password, loading, register_error, register} = use_register();
     const navigate = useNavigate();
+
+    async function handle_register(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (!is_valid_captcha(captcha, captcha_answer)) return;
+        const success = await register({ email, password });
+        if(success) {
+            localstorage_manager.set('otp_email', email);
+            navigate('/auth');
+        }
+    }
     return (
         <div className="w-full">
             <Card className="w-full max-w-sm mx-auto">
@@ -116,13 +126,4 @@ export default function Register_Page() {
             </Card>
         </div>
     );
-    async function handle_register(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        if (!is_valid_captcha(captcha, captcha_answer)) return;
-        const success = await register({ email, password });
-        if(success) {
-            localstorage_manager.set('otp_email', email);
-            navigate('/auth');
-        }
-    }
 }

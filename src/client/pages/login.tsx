@@ -10,12 +10,28 @@ import {
     CardTitle,
 } from "@/src/client/components/ui/card"
 import { Button } from "@/src/client/components/ui/button";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import use_captcha from "@/src/client/hooks/use-captcha";
 import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
+import use_login from "@/src/client/hooks/use-login";
+import { type FormEvent } from "react";
+import localstorage_manager from "@/src/client/lib/custom/localstorage";
+import { Spinner } from "@/src/client/components/ui/spinner";
 
 export default function Login_Page() {
+    const {email, password, set_email, set_password, loading, login} = use_login()
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
+    const navigate = useNavigate();
+
+    async function handle_login(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (!is_valid_captcha(captcha, captcha_answer)) return;
+        const success = await login({ email, password });
+        if(success) {
+            localstorage_manager.set('otp_email', email);
+            navigate('/auth');
+        }
+    }
     return (
         <div className="w-full">
             <Card className="w-full max-w-sm mx-auto">
@@ -31,11 +47,13 @@ export default function Login_Page() {
                     </CardAction>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-3">
-                    <form>
+                    <form onSubmit={handle_login}>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
+                                    value={email}
+                                    onChange={e => set_email(e.target.value)}
                                     id="email"
                                     type="email"
                                     placeholder="m@example.com"
@@ -52,10 +70,21 @@ export default function Login_Page() {
                                         Forgot your password?
                                     </a>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input
+                                    value={password}
+                                    onChange={e => set_password(e.target.value)}
+                                    id="password"
+                                    type="password"
+                                    required />
                             </div>
+                            <Button type="submit" className="w-full">
+                                {loading && <Spinner />} 
+                                Login
+                            </Button>
                         </div>
                     </form>
+                </CardContent>
+                <CardFooter className="flex-col gap-2">
                     {
                         captcha instanceof Error ? (
                             <div className="w-full">
@@ -77,17 +106,9 @@ export default function Login_Page() {
                             </div>
                         )
                     }
-                </CardContent>
-                <CardFooter className="flex-col gap-2">
-                    <Button onClick={handle_login} type="button" className="w-full">
-                        Login
-                    </Button>
                 </CardFooter>
             </Card>
         </div>
     );
 
-    async function handle_login() {
-        is_valid_captcha(captcha, captcha_answer);
-    }
 }

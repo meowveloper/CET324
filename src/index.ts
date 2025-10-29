@@ -4,6 +4,7 @@ import { init_db } from "@/src/server/services/db";
 import { register_controller } from "./server/controllers/register";
 import { otp_controller } from "@/src/server/controllers/otp";
 import { logout_controller, me_controller } from "@/src/server/controllers/me";
+import { login_controller } from "@/src/server/controllers/login";
 
 const res = init_db();
 if(res instanceof Error) throw res;
@@ -16,6 +17,10 @@ const server = serve({
 
         "/api/register": {
             POST: async (req) => await register_controller(req),
+        },
+
+        "/api/login": {
+            POST: async (req) => await login_controller(req),
         },
 
         "/api/verify-otp": {
