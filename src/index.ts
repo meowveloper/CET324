@@ -3,7 +3,7 @@ import index from "@/src/index.html";
 import { init_db } from "@/src/server/services/db";
 import { register_controller } from "./server/controllers/register";
 import { otp_controller } from "@/src/server/controllers/otp";
-import { me_controller } from "@/src/server/controllers/me";
+import { logout_controller, me_controller } from "@/src/server/controllers/me";
 
 const res = init_db();
 if(res instanceof Error) throw res;
@@ -24,6 +24,10 @@ const server = serve({
 
         "/api/me": {
             GET: async (req) => await me_controller(req),
+        },
+        
+        "/api/logout": {
+            GET: async (req) => await logout_controller(req)
         }
     },
 

@@ -1,5 +1,5 @@
 import { error, success, verify_jwt_token } from "@/src/server/utils";
-import type { Me_API_Response } from "@/src/share/types";
+import type { Logout_Api_Response, Me_API_Response } from "@/src/share/types";
 
 export const me_controller = async (req: Bun.BunRequest) => {
     const token = req.cookies.get('token');
@@ -21,7 +21,7 @@ export const me_controller = async (req: Bun.BunRequest) => {
 export const logout_controller = async (req: Bun.BunRequest) => {
     try {
         req.cookies.delete('token');
-        return success('successfully logged out');
+        return success<Logout_Api_Response>({ message : 'successfully logged out' });
     } catch (e) {
         return error("something went wrong");
     }

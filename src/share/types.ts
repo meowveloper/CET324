@@ -19,3 +19,7 @@ export type VerifyOTP_API_Response = {
 export type Me_API_Response = {
     email: string;
 }
+
+export type Logout_Api_Response = {
+    message: string;
+}
