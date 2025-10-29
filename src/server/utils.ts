@@ -1,7 +1,7 @@
 import {SignJWT} from 'jose'
 
 
-export const success = (data : Object) => Response.json(data);
+export const success = <T extends Object>(data : T) => Response.json(data);
 
 export const error = (message: string) => Response.json({ message }, { status : 500 });
 

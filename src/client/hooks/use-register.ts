@@ -9,17 +9,24 @@ export default function use_register() {
     const [register_error, set_register_error] = useState<string>('');
     const [loading, set_loading] = useState<boolean>(false);
 
-    async function register(data: Register_DTO) {
+    async function register(data: Register_DTO): Promise<boolean> {
         try {
             set_loading(true);
             set_register_error('');
-            if (password !== confirm_password) set_register_error('unmatched passwords');
+            if (password !== confirm_password) {
+                set_register_error('unmatched passwords');
+                return false;
+            }
             else {
                 const res = await fetcher<Register_API_Response>('/api/register', 'POST', { body: data });
-                if (res instanceof Error) set_register_error(res.message);
+                if (res instanceof Error) {
+                    set_register_error(res.message);
+                    return false;
+                }
                 else {
                     console.log(res.message);
                     set_register_error('');
+                    return true;
                 }
             }
         } finally {

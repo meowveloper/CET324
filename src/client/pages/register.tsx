@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from "@/src/client/components/ui/card"
 import { Button } from "@/src/client/components/ui/button";
-import { NavLink, redirect, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import use_captcha from "@/src/client/hooks/use-captcha";
 import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
 import { type FormEvent } from "react";
@@ -119,8 +119,8 @@ export default function Register_Page() {
     async function handle_register(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!is_valid_captcha(captcha, captcha_answer)) return;
-        await register({ email, password });
-        if(!register_error.trim()) {
+        const success = await register({ email, password });
+        if(success) {
             localstorage_manager.set('otp_email', email);
             navigate('/auth');
         }

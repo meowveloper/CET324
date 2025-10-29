@@ -6,3 +6,12 @@ export type Register_DTO = {
 export type Register_API_Response = {
     message: string;
 }
+
+export type VerifyOTP_DTO = {
+    email: string;
+    otp: string;
+}
+
+export type VerifyOTP_API_Response = {
+    message: string;
+}

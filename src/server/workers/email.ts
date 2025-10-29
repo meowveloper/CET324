@@ -1,19 +1,14 @@
-import { send_email, send_email_with_grid } from "@/src/server/services/email";
-import otp_storage from "@/src/server/otp-storage";
+import { send_email_with_grid } from "@/src/server/services/email";
+import { add_otp } from "@/src/server/services/db";
 import { OTP_EXPIRE_DURATION } from "@/src/share/consts";
 
 declare var self: Worker;
 
-
 self.onmessage = async (event: MessageEvent) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otp_storage.set(event.data, otp);
+    const expires_at = Date.now() + OTP_EXPIRE_DURATION;
+    add_otp(event.data, otp, expires_at);
     await send_otp(event.data, otp);
-
-    // delete otp after 15 mins
-    setTimeout(() => {
-        otp_storage.delete(event.data); 
-    }, OTP_EXPIRE_DURATION);
 };
 
 const send_otp = async (to: string, otp: string) => {
