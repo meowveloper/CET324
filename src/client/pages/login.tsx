@@ -17,11 +17,14 @@ import use_login from "@/src/client/hooks/use-login";
 import { type FormEvent } from "react";
 import localstorage_manager from "@/src/client/lib/custom/localstorage";
 import { Spinner } from "@/src/client/components/ui/spinner";
+import use_redirect_if_login from "@/src/client/hooks/use-redirect-if-login";
 
 export default function Login_Page() {
     const {email, password, set_email, set_password, loading, login} = use_login()
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
     const navigate = useNavigate();
+
+    use_redirect_if_login();
 
     async function handle_login(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();

@@ -17,11 +17,14 @@ import { type FormEvent } from "react";
 import use_register from "@/src/client/hooks/use-register";
 import localstorage_manager from "@/src/client/lib/custom/localstorage";
 import { Spinner } from "@/src/client/components/ui/spinner";
+import use_redirect_if_login from "@/src/client/hooks/use-redirect-if-login";
 
 export default function Register_Page() {
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
     const {email, password, confirm_password, set_email, set_password, set_confirm_password, loading, register_error, register} = use_register();
     const navigate = useNavigate();
+
+    use_redirect_if_login();
 
     async function handle_register(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();

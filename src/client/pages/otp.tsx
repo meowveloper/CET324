@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
 import use_otp from "@/src/client/hooks/use-otp";
 import { useNavigate } from "react-router";
 import { use_auth } from "@/src/client/context/auth-context";
+import use_redirect_if_login from "@/src/client/hooks/use-redirect-if-login";
 
 export default function OTP_Page() {
     const initial_expires_in = Number(localstorage_manager.get('otp_expires_in'))
@@ -28,6 +29,12 @@ export default function OTP_Page() {
 
     const navigate = useNavigate();
     const auth_context = use_auth();
+
+    use_redirect_if_login();
+
+    useEffect(() => {
+        if(!localstorage_manager.get('otp_email')) navigate('/', {replace: true});
+    }, [navigate])
 
     useEffect(() => {
         if(interval_ref.current === null && expires_in > 0) {
