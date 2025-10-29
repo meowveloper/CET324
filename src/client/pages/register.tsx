@@ -10,19 +10,18 @@ import {
     CardTitle,
 } from "@/src/client/components/ui/card"
 import { Button } from "@/src/client/components/ui/button";
-import { NavLink } from "react-router";
+import { NavLink, redirect, useNavigate } from "react-router";
 import use_captcha from "@/src/client/hooks/use-captcha";
 import { Alert, AlertDescription } from "@/src/client/components/ui/alert";
-import { useState, type FormEvent } from "react";
-import { register } from "../lib/custom/register";
+import { type FormEvent } from "react";
+import use_register from "@/src/client/hooks/use-register";
+import localstorage_manager from "@/src/client/lib/custom/localstorage";
+import { Spinner } from "@/src/client/components/ui/spinner";
 
 export default function Register_Page() {
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
-
-    const [email, set_email] = useState<string>('');
-    const [password, set_password] = useState<string>('');
-    const [confirm_password, set_confirm_password] = useState<string>('');
-    const [register_error, set_register_error] = useState<string>('');
+    const {email, password, confirm_password, set_email, set_password, set_confirm_password, loading, register_error, register} = use_register();
+    const navigate = useNavigate();
     return (
         <div className="w-full">
             <Card className="w-full max-w-sm mx-auto">
@@ -84,6 +83,7 @@ export default function Register_Page() {
                             </div>
                         </div>
                         <Button type="submit" className="w-full">
+                            {loading && <Spinner />} 
                             Register
                         </Button>
                     </form>
@@ -119,7 +119,10 @@ export default function Register_Page() {
     async function handle_register(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!is_valid_captcha(captcha, captcha_answer)) return;
-        if (password !== confirm_password) set_register_error('unmatched passwords');
         await register({ email, password });
+        if(!register_error.trim()) {
+            localstorage_manager.set('otp_email', email);
+            navigate('/auth');
+        }
     }
 }

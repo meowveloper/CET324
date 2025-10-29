@@ -15,6 +15,7 @@ import Login_Page from "@/src/client/pages/login";
 import Register_Page from "@/src/client/pages/register";
 import { ThemeProvider } from "@/src/client/components/theme-provider";
 import Root_Layout from "@/src/client/layouts/root";
+import OTP_Page from "@/src/client/pages/otp";
 
 const router =  createBrowserRouter([
     {
@@ -24,6 +25,7 @@ const router =  createBrowserRouter([
             { index: true, Component: Home_Page },
             { path: "login", Component: Login_Page },
             { path: "register", Component: Register_Page },
+            { path: "auth", Component: OTP_Page }
         ]
     },
 ]);
