@@ -20,7 +20,7 @@ import { Spinner } from "@/src/client/components/ui/spinner";
 import use_redirect_if_login from "@/src/client/hooks/use-redirect-if-login";
 
 export default function Login_Page() {
-    const {email, password, set_email, set_password, loading, login} = use_login()
+    const {email, password, set_email, set_password, loading, login, error} = use_login()
     const { captcha, is_valid_captcha, set_captcha_answer, captcha_answer, captcha_error } = use_captcha();
     const navigate = useNavigate();
 
@@ -80,6 +80,13 @@ export default function Login_Page() {
                                     type="password"
                                     required />
                             </div>
+                            {error && (
+                                <Alert variant={'destructive'} className="border-none p-0">
+                                    <AlertDescription>
+                                        <p>{error}</p>
+                                    </AlertDescription>
+                                </Alert>
+                            )}
                             <Button type="submit" className="w-full">
                                 {loading && <Spinner />} 
                                 Login
