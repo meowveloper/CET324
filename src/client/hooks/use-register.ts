@@ -17,6 +17,10 @@ export default function use_register() {
                 set_register_error('unmatched passwords');
                 return false;
             }
+            if(password.length < 8) {
+                set_register_error('password must be at least 8 characters long');
+                return false;
+            }
             else {
                 const res = await fetcher<Register_API_Response>('/api/register', 'POST', { body: data });
                 if (res instanceof Error) {
